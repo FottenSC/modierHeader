@@ -4,7 +4,12 @@
     "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
     "strict": true,
-    "types": ["node", "vitest/globals"]
+    "types": [
+      "node",
+      "vitest/globals",
+      "@digdir/designsystemet-react/react-types",
+      "@digdir/designsystemet-css/theme"
+    ]
   },
   "include": ["entrypoints", "src", "scripts", "tests", "wxt.config.ts", "vitest.config.ts"]
 }

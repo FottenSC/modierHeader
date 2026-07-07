@@ -1,5 +1,19 @@
+import '@digdir/designsystemet-css';
+import '@digdir/designsystemet-css/theme';
 import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import {
+  Alert,
+  Button,
+  Field,
+  Heading,
+  Label,
+  Paragraph,
+  Select,
+  SelectOption,
+  Switch,
+  Tag,
+} from '@digdir/designsystemet-react';
 import { browser } from 'wxt/browser';
 import { APPLY_RULES_MESSAGE, OPEN_OPTIONS_MESSAGE } from '../../src/shared/messages';
 import { countEnabledRules } from '../../src/shared/compiler';
@@ -61,76 +75,83 @@ function Popup() {
   }
 
   if (!state) {
-    return <main className="popup">Loading...</main>;
+    return (
+      <main className="popup" data-color-scheme="light" data-color="brand1" data-size="sm">
+        <Paragraph data-size="sm">Loading...</Paragraph>
+      </main>
+    );
   }
 
   return (
-    <main className="popup">
-      <header>
+    <main className="popup" data-color-scheme="light" data-color="brand1" data-size="sm">
+      <header className="popup__header">
         <div>
-          <h1>CleanHeader</h1>
-          <p>{countEnabledRules(state)} enabled rule(s)</p>
+          <Heading level={1} data-size="xs">
+            CleanHeader
+          </Heading>
+          <Paragraph data-size="sm" className="popup__subtle">
+            {countEnabledRules(state)} enabled rule(s)
+          </Paragraph>
         </div>
-        <label className="switch">
-          <input
-            type="checkbox"
-            checked={state.enabled}
-            onChange={(event) => save({ ...state, enabled: event.target.checked })}
-          />
-          <span>{state.enabled ? 'On' : 'Off'}</span>
-        </label>
+        <Switch
+          aria-label="Extension enabled"
+          checked={state.enabled}
+          onChange={(event) => save({ ...state, enabled: event.target.checked })}
+        />
       </header>
 
-      <label className="field">
-        Active profile
-        <select
+      <Field>
+        <Label>Active profile</Label>
+        <Select
           value={state.activeProfileId}
           onChange={(event) => save({ ...state, activeProfileId: event.target.value })}
         >
           {state.profiles.map((profile) => (
-            <option key={profile.id} value={profile.id}>
+            <SelectOption key={profile.id} value={profile.id}>
               {profile.name}
-            </option>
+            </SelectOption>
           ))}
-        </select>
-      </label>
+        </Select>
+      </Field>
 
       {activeProfile && (
-        <label className="check-row">
-          <input
-            type="checkbox"
-            checked={activeProfile.enabled}
-            onChange={(event) =>
-              save({
-                ...state,
-                profiles: state.profiles.map((profile) =>
-                  profile.id === activeProfile.id ? { ...profile, enabled: event.target.checked } : profile,
-                ),
-              })
-            }
-          />
-          Profile enabled
-        </label>
+        <Switch
+          label="Profile enabled"
+          checked={activeProfile.enabled}
+          onChange={(event) =>
+            save({
+              ...state,
+              profiles: state.profiles.map((profile) =>
+                profile.id === activeProfile.id ? { ...profile, enabled: event.target.checked } : profile,
+              ),
+            })
+          }
+        />
       )}
 
       {sitePermission && (
         <section className="site-permission" aria-label="Current site permission">
-          <span>{sitePermission.host}</span>
+          <div className="site-permission__text">
+            <Paragraph data-size="xs" className="popup__subtle">
+              Current site
+            </Paragraph>
+            <Paragraph data-size="sm">{sitePermission.host}</Paragraph>
+          </div>
           {sitePermission.granted ? (
-            <strong>Allowed</strong>
+            <Tag data-color="success">Allowed</Tag>
           ) : (
-            <button type="button" onClick={requestCurrentSitePermission}>
+            <Button type="button" variant="secondary" onClick={requestCurrentSitePermission}>
               Allow site
-            </button>
+            </Button>
           )}
         </section>
       )}
 
-      <p className={state.lastApply?.ok === false ? 'status error' : 'status'}>{status}</p>
+      <Alert data-color={state.lastApply?.ok === false ? 'danger' : 'info'}>{status}</Alert>
 
-      <button type="button" onClick={() => browser.runtime.sendMessage({ type: OPEN_OPTIONS_MESSAGE })}>
+      <Button type="button" onClick={() => browser.runtime.sendMessage({ type: OPEN_OPTIONS_MESSAGE })}>
         Open options
-      </button>
+      </Button>
     </main>
   );
 }
