@@ -26,7 +26,6 @@ body {
 .popup__toolbar,
 .profile-panel__top,
 .profile-actions,
-.profile-sidebar__header,
 .permission-row,
 .rules-section__header,
 .rule-card__summary,
@@ -37,7 +36,6 @@ body {
 }
 
 .popup__header,
-.profile-sidebar__header,
 .permission-row,
 .rules-section__header,
 .rule-card__summary {
@@ -47,7 +45,6 @@ body {
 .popup__header h1,
 .popup__header p,
 .permission-row p,
-.profile-sidebar__header h2,
 .profile-panel__top h2,
 .profile-panel__top p,
 .rules-section__header h2,
@@ -68,7 +65,7 @@ body {
   align-items: start;
   display: grid;
   gap: var(--ds-size-4);
-  grid-template-columns: 14rem minmax(0, 1fr);
+  grid-template-columns: 3.5rem minmax(0, 1fr);
 }
 
 .popup-workspace {
@@ -83,43 +80,44 @@ body {
   border-radius: var(--ds-border-radius-md);
   display: grid;
   gap: var(--ds-size-3);
+  grid-template-rows: 1fr auto;
   max-height: calc(740px - 8.5rem);
+  min-height: 18rem;
   min-width: 0;
   overflow: auto;
-  padding: var(--ds-size-3);
+  padding: var(--ds-size-2);
   position: sticky;
   top: 0;
 }
 
-.profile-sidebar__header {
-  gap: var(--ds-size-2);
-}
-
 .profile-list {
   display: grid;
+  align-content: start;
   gap: var(--ds-size-2);
 }
 
-.profile-list button {
-  justify-content: space-between;
-  min-width: 0;
+.profile-icon-button {
+  aspect-ratio: 1;
+  border-radius: var(--ds-border-radius-sm);
+  font-weight: var(--ds-font-weight-semibold);
+  inline-size: 2.5rem;
+  justify-content: center;
+  min-block-size: 2.5rem;
+  min-inline-size: 2.5rem;
+  padding: 0;
+  text-align: center;
 }
 
-.profile-list__name {
-  min-width: 0;
+.profile-icon-button span {
+  display: block;
+  max-inline-size: 2rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.profile-list__meta {
-  color: var(--ds-color-text-subtle);
-  font-size: 0.75rem;
-  white-space: nowrap;
-}
-
-.profile-list button[aria-current="page"] .profile-list__meta {
-  color: var(--ds-color-text-inverted);
+.profile-icon-button--add {
+  align-self: end;
 }
 
 .profile-panel,
@@ -251,21 +249,19 @@ body {
   }
 
   .popup-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: 3.5rem minmax(0, 1fr);
   }
 
   .profile-sidebar {
-    max-height: none;
-    position: static;
+    min-height: 14rem;
   }
 
   .profile-list {
-    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    grid-template-columns: 1fr;
   }
 
   .popup__header,
   .profile-panel__top,
-  .profile-sidebar__header,
   .permission-row,
   .rules-section__header,
   .rule-card__summary {

@@ -59,6 +59,21 @@ function SelectField({ children, className, disabled, label, onChange, value }: 
   );
 }
 
+function getProfileIcon(profile: ModierHeadersProfile, index: number): string {
+  const name = profile.name.trim();
+  if (!name) return String(index + 1);
+
+  const initials = name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join('')
+    .toUpperCase();
+
+  return initials || String(index + 1);
+}
+
 const REDIRECT_PLACEHOLDER = ['https', '://new.example/\\1'].join('');
 
 function Popup() {
@@ -264,31 +279,38 @@ function Popup() {
 
       <div className="popup-layout">
         <aside className="profile-sidebar" aria-label="Profiles">
-          <div className="profile-sidebar__header">
-            <Heading level={2} data-size="xs">
-              Profiles
-            </Heading>
-            <Button type="button" variant="secondary" onClick={addProfile}>
-              New
-            </Button>
-          </div>
-
           <nav className="profile-list" aria-label="Switch profile">
-            {draft.profiles.map((profile) => (
-              <Button
-                key={profile.id}
-                type="button"
-                variant={profile.id === draft.activeProfileId ? 'primary' : 'tertiary'}
-                aria-current={profile.id === draft.activeProfileId ? 'page' : undefined}
-                onClick={() => setDraft({ ...draft, activeProfileId: profile.id })}
-              >
-                <span className="profile-list__name">{profile.name}</span>
-                <span className="profile-list__meta">
-                  {profile.rules.filter((rule) => rule.enabled).length}/{profile.rules.length}
-                </span>
-              </Button>
-            ))}
+            {draft.profiles.map((profile, index) => {
+              const enabledRules = profile.rules.filter((rule) => rule.enabled).length;
+              const title = `${profile.name}: ${enabledRules}/${profile.rules.length} enabled rules`;
+
+              return (
+                <Button
+                  key={profile.id}
+                  className="profile-icon-button"
+                  type="button"
+                  variant={profile.id === draft.activeProfileId ? 'primary' : 'tertiary'}
+                  aria-current={profile.id === draft.activeProfileId ? 'page' : undefined}
+                  aria-label={`Switch to ${profile.name}`}
+                  title={title}
+                  onClick={() => setDraft({ ...draft, activeProfileId: profile.id })}
+                >
+                  <span aria-hidden="true">{getProfileIcon(profile, index)}</span>
+                </Button>
+              );
+            })}
           </nav>
+
+          <Button
+            className="profile-icon-button profile-icon-button--add"
+            type="button"
+            variant="secondary"
+            aria-label="Create profile"
+            title="Create profile"
+            onClick={addProfile}
+          >
+            <span aria-hidden="true">+</span>
+          </Button>
         </aside>
 
         <section className="popup-workspace" aria-label="Profile workspace">
