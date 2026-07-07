@@ -1,8 +1,8 @@
 import { DEFAULT_RESOURCE_TYPES, HEADER_APPEND_ALLOWLIST, REQUEST_METHODS } from './constants';
 import type {
-  CleanHeaderProfile,
-  CleanHeaderRule,
-  CleanHeaderState,
+  ModierHeadersProfile,
+  ModierHeadersRule,
+  ModierHeadersState,
   RequestMethod,
   ResourceType,
   ValidationIssue,
@@ -22,7 +22,7 @@ export function parseList(value: string): string[] {
     .filter(Boolean);
 }
 
-export function validateRule(rule: CleanHeaderRule, path = 'rule'): ValidationIssue[] {
+export function validateRule(rule: ModierHeadersRule, path = 'rule'): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
 
   if (!rule.name.trim()) {
@@ -115,7 +115,7 @@ export function validateRule(rule: CleanHeaderRule, path = 'rule'): ValidationIs
   return issues;
 }
 
-export function validateProfile(profile: CleanHeaderProfile, path = 'profile'): ValidationIssue[] {
+export function validateProfile(profile: ModierHeadersProfile, path = 'profile'): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
   if (!profile.name.trim()) {
     issues.push({ path: `${path}.name`, message: 'Profile name is required.' });
@@ -126,7 +126,7 @@ export function validateProfile(profile: CleanHeaderProfile, path = 'profile'): 
   return issues;
 }
 
-export function validateState(state: CleanHeaderState): ValidationIssue[] {
+export function validateState(state: ModierHeadersState): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
   if (state.version !== 1) {
     issues.push({ path: 'version', message: 'Unsupported state version.' });

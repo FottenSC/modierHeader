@@ -1,6 +1,6 @@
-# CleanHeader
+# modierHeaders
 
-CleanHeader is an open-source Manifest V3 browser extension for Chrome and Edge that modifies HTTP request headers, response headers, and redirect URLs.
+modierHeaders is an open-source Manifest V3 browser extension for Chrome and Edge that modifies HTTP request headers, response headers, and redirect URLs.
 
 It is intentionally local-only:
 

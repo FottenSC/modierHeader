@@ -1,17 +1,17 @@
-import type { CleanHeaderProfile, CleanHeaderRule, CleanHeaderState } from './types';
+import type { ModierHeadersProfile, ModierHeadersRule, ModierHeadersState } from './types';
 
 export function createId(prefix: string): string {
   return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
 }
 
-export function createEmptyRule(partial: Partial<CleanHeaderRule> = {}): CleanHeaderRule {
+export function createEmptyRule(partial: Partial<ModierHeadersRule> = {}): ModierHeadersRule {
   return {
     id: createId('rule'),
     name: 'New rule',
     enabled: true,
     kind: 'requestHeader',
     operation: 'set',
-    headerName: 'x-cleanheader-demo',
+    headerName: 'x-modierheaders-demo',
     headerValue: 'enabled',
     redirectRegexSubstitution: '',
     target: {
@@ -26,7 +26,7 @@ export function createEmptyRule(partial: Partial<CleanHeaderRule> = {}): CleanHe
   };
 }
 
-export function createProfile(name = 'Default'): CleanHeaderProfile {
+export function createProfile(name = 'Default'): ModierHeadersProfile {
   return {
     id: createId('profile'),
     name,
@@ -35,7 +35,7 @@ export function createProfile(name = 'Default'): CleanHeaderProfile {
   };
 }
 
-export function createDefaultState(): CleanHeaderState {
+export function createDefaultState(): ModierHeadersState {
   const profile = createProfile();
   return {
     version: 1,

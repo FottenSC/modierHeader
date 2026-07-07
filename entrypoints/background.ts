@@ -1,6 +1,6 @@
 import { browser } from 'wxt/browser';
 import { defineBackground } from 'wxt/utils/define-background';
-import { APPLY_RULES_MESSAGE, OPEN_OPTIONS_MESSAGE, type CleanHeaderMessage } from '../src/shared/messages';
+import { APPLY_RULES_MESSAGE, OPEN_OPTIONS_MESSAGE, type ModierHeadersMessage } from '../src/shared/messages';
 import { STORAGE_KEY } from '../src/shared/constants';
 import { compileStateToDnr } from '../src/shared/compiler';
 import { getState, setState } from '../src/shared/storage';
@@ -99,7 +99,7 @@ export default defineBackground({
       applyRules().catch(console.error);
     });
 
-    browser.runtime.onMessage.addListener((message: CleanHeaderMessage) => {
+    browser.runtime.onMessage.addListener((message: ModierHeadersMessage) => {
       if (message?.type === APPLY_RULES_MESSAGE) {
         return applyRules();
       }

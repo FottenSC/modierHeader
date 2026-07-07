@@ -5,7 +5,7 @@ import packageJson from '../package.json' with { type: 'json' };
 
 const browser = process.argv[2] ?? 'chrome';
 const sourceDir = path.resolve('.output', `${browser}-mv3`);
-const outputFile = path.resolve('.output', `cleanheader-${packageJson.version}-${browser}.zip`);
+const outputFile = path.resolve('.output', `modierheaders-${packageJson.version}-${browser}.zip`);
 const fixedDate = new Date('1980-01-01T00:00:00Z');
 
 async function listFiles(dir, base = dir) {

@@ -1,8 +1,10 @@
 import type { HeaderName } from './types';
 
-export const APP_NAME = 'CleanHeader';
-export const STORAGE_KEY = 'cleanheaderState';
-export const EXPORT_SCHEMA = 'cleanheader.export.v1';
+export const APP_NAME = 'modierHeaders';
+export const STORAGE_KEY = 'modierHeadersState';
+export const LEGACY_STORAGE_KEY = 'cleanheaderState';
+export const EXPORT_SCHEMA = 'modierheaders.export.v1';
+export const LEGACY_EXPORT_SCHEMA = 'cleanheader.export.v1';
 
 export const DEFAULT_RESOURCE_TYPES = [
   'main_frame',

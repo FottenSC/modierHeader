@@ -1,7 +1,7 @@
 {
-  "name": "cleanheader",
+  "name": "modierheaders",
   "version": "0.1.0",
-  "description": "A local-only MV3 header and redirect rule editor for Chrome and Edge.",
+  "description": "modierHeaders is a local-only MV3 header and redirect rule editor for Chrome and Edge.",
   "license": "MIT",
   "type": "module",
   "private": true,

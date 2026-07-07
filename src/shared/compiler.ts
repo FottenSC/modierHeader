@@ -1,14 +1,14 @@
 import { DEFAULT_RESOURCE_TYPES } from './constants';
 import { normalizeHeaderName, validateState } from './validation';
 import type {
-  CleanHeaderRule,
-  CleanHeaderState,
+  ModierHeadersRule,
+  ModierHeadersState,
   CompileResult,
   DnrHeaderOperation,
   DnrRule,
 } from './types';
 
-function toHeaderOperation(rule: CleanHeaderRule): DnrHeaderOperation {
+function toHeaderOperation(rule: ModierHeadersRule): DnrHeaderOperation {
   const operation: DnrHeaderOperation = {
     header: normalizeHeaderName(rule.headerName),
     operation: rule.operation,
@@ -19,7 +19,7 @@ function toHeaderOperation(rule: CleanHeaderRule): DnrHeaderOperation {
   return operation;
 }
 
-function toCondition(rule: CleanHeaderRule): DnrRule['condition'] {
+function toCondition(rule: ModierHeadersRule): DnrRule['condition'] {
   const condition: DnrRule['condition'] = {
     resourceTypes:
       rule.target.resourceTypes.length > 0 ? rule.target.resourceTypes : [...DEFAULT_RESOURCE_TYPES],
@@ -43,7 +43,7 @@ function toCondition(rule: CleanHeaderRule): DnrRule['condition'] {
   return condition;
 }
 
-function toDnrRule(rule: CleanHeaderRule, ruleId: number): DnrRule {
+function toDnrRule(rule: ModierHeadersRule, ruleId: number): DnrRule {
   if (rule.kind === 'redirect') {
     return {
       id: ruleId,
@@ -72,7 +72,7 @@ function toDnrRule(rule: CleanHeaderRule, ruleId: number): DnrRule {
   };
 }
 
-export function compileStateToDnr(state: CleanHeaderState): CompileResult {
+export function compileStateToDnr(state: ModierHeadersState): CompileResult {
   const issues = validateState(state);
   if (issues.length > 0 || !state.enabled) {
     return { rules: [], issues };
@@ -92,7 +92,7 @@ export function compileStateToDnr(state: CleanHeaderState): CompileResult {
   return { rules, issues: [] };
 }
 
-export function countEnabledRules(state: CleanHeaderState): number {
+export function countEnabledRules(state: ModierHeadersState): number {
   if (!state.enabled) return 0;
   const profile = state.profiles.find((item) => item.id === state.activeProfileId);
   if (!profile?.enabled) return 0;

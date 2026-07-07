@@ -23,8 +23,9 @@ import { compileStateToDnr, countEnabledRules } from '../../src/shared/compiler'
 import { createEmptyRule, createProfile } from '../../src/shared/defaults';
 import { createExportPayload, parseImportPayload } from '../../src/shared/exporter';
 import { getState, setState } from '../../src/shared/storage';
+import { APP_NAME } from '../../src/shared/constants';
 import { parseList, validateState } from '../../src/shared/validation';
-import type { CleanHeaderProfile, CleanHeaderRule, CleanHeaderState } from '../../src/shared/types';
+import type { ModierHeadersProfile, ModierHeadersRule, ModierHeadersState } from '../../src/shared/types';
 import type { ChangeEvent, ChangeEventHandler, ReactNode } from 'react';
 import './style.css';
 
@@ -61,7 +62,7 @@ function SelectField({ children, className, disabled, label, onChange, value }: 
 const REDIRECT_PLACEHOLDER = ['https', '://new.example/\\1'].join('');
 
 function Popup() {
-  const [draft, setDraft] = useState<CleanHeaderState | null>(null);
+  const [draft, setDraft] = useState<ModierHeadersState | null>(null);
   const [status, setStatus] = useState('Loading...');
   const [sitePermission, setSitePermission] = useState<SitePermission | null>(null);
   const [hasAllUrls, setHasAllUrls] = useState(false);
@@ -89,7 +90,7 @@ function Popup() {
   const validationIssues = useMemo(() => (draft ? validateState(draft) : []), [draft]);
   const compileResult = useMemo(() => (draft ? compileStateToDnr(draft) : null), [draft]);
 
-  function updateActiveProfile(updater: (profile: CleanHeaderProfile) => CleanHeaderProfile) {
+  function updateActiveProfile(updater: (profile: ModierHeadersProfile) => ModierHeadersProfile) {
     setDraft((current) => {
       if (!current) return current;
       return {
@@ -101,7 +102,7 @@ function Popup() {
     });
   }
 
-  function updateRule(ruleId: string, updater: (rule: CleanHeaderRule) => CleanHeaderRule) {
+  function updateRule(ruleId: string, updater: (rule: ModierHeadersRule) => ModierHeadersRule) {
     updateActiveProfile((profile) => ({
       ...profile,
       rules: profile.rules.map((rule) => (rule.id === ruleId ? updater(rule) : rule)),
@@ -142,7 +143,7 @@ function Popup() {
     }
 
     await setState(draft);
-    const diagnostics = (await browser.runtime.sendMessage({ type: APPLY_RULES_MESSAGE })) as CleanHeaderState['lastApply'];
+    const diagnostics = (await browser.runtime.sendMessage({ type: APPLY_RULES_MESSAGE })) as ModierHeadersState['lastApply'];
     setDraft({ ...draft, lastApply: diagnostics });
     setStatus(diagnostics?.message ?? 'Saved.');
   }
@@ -198,7 +199,7 @@ function Popup() {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;
-    anchor.download = 'cleanheader-export.json';
+    anchor.download = 'modierheaders-export.json';
     anchor.click();
     URL.revokeObjectURL(url);
   }
@@ -213,7 +214,7 @@ function Popup() {
       setDraft(cloneState(imported));
       const diagnostics = (await browser.runtime.sendMessage({
         type: APPLY_RULES_MESSAGE,
-      })) as CleanHeaderState['lastApply'];
+      })) as ModierHeadersState['lastApply'];
       setStatus(diagnostics?.message ?? 'Imported and applied.');
     } catch (error) {
       setStatus(error instanceof Error ? error.message : String(error));
@@ -235,7 +236,7 @@ function Popup() {
       <header className="popup__header">
         <div>
           <Heading level={1} data-size="xs">
-            CleanHeader
+            {APP_NAME}
           </Heading>
           <Paragraph data-size="sm" className="popup__subtle">
             {countEnabledRules(draft)} enabled rule(s), {compileResult?.rules.length ?? 0} compiled
@@ -416,7 +417,7 @@ function Popup() {
                       label="Type"
                       value={rule.kind}
                       onChange={(event) =>
-                        updateRule(rule.id, (item) => ({ ...item, kind: event.target.value as CleanHeaderRule['kind'] }))
+                        updateRule(rule.id, (item) => ({ ...item, kind: event.target.value as ModierHeadersRule['kind'] }))
                       }
                     >
                       <SelectOption value="requestHeader">Request header</SelectOption>
@@ -432,7 +433,7 @@ function Popup() {
                           onChange={(event) =>
                             updateRule(rule.id, (item) => ({
                               ...item,
-                              operation: event.target.value as CleanHeaderRule['operation'],
+                              operation: event.target.value as ModierHeadersRule['operation'],
                             }))
                           }
                         >
@@ -518,7 +519,7 @@ function Popup() {
                           ...item,
                           target: {
                             ...item.target,
-                            resourceTypes: parseList(event.target.value) as CleanHeaderRule['target']['resourceTypes'],
+                            resourceTypes: parseList(event.target.value) as ModierHeadersRule['target']['resourceTypes'],
                           },
                         }))
                       }
@@ -534,7 +535,7 @@ function Popup() {
                             ...item.target,
                             requestMethods: parseList(event.target.value).map((method) =>
                               method.toLowerCase(),
-                            ) as CleanHeaderRule['target']['requestMethods'],
+                            ) as ModierHeadersRule['target']['requestMethods'],
                           },
                         }))
                       }

@@ -1,12 +1,12 @@
-# CleanHeader End-to-End Testing Plan
+# modierHeaders End-to-End Testing Plan
 
-This plan adds browser-level coverage around CleanHeader using Selenium WebDriver plus a local HTTP server. Unit tests still own schema validation and compiler edge cases; these tests prove the built MV3 extension modifies real browser traffic.
+This plan adds browser-level coverage around modierHeaders using Selenium WebDriver plus a local HTTP server. Unit tests still own schema validation and compiler edge cases; these tests prove the built MV3 extension modifies real browser traffic.
 
 ## Goals
 
 - Load the built Chrome MV3 extension in an isolated browser profile.
 - Serve deterministic test pages from a local web server.
-- Seed CleanHeader profiles directly into `chrome.storage.local` from an extension page.
+- Seed modierHeaders profiles directly into `chrome.storage.local` from an extension page.
 - Verify request header mutation, response header mutation, redirect rules, profile disabling, and no unsolicited tabs.
 - Keep production permissions strict while allowing deterministic localhost host access in the test build only.
 
@@ -25,10 +25,10 @@ ChromeDriver documents loading unpacked extensions with `ChromeOptions` and a `l
 Add an e2e-only build mode:
 
 ```sh
-CLEANHEADER_E2E=1 npm run build
+MODIERHEADERS_E2E=1 npm run build
 ```
 
-When `CLEANHEADER_E2E=1`, `wxt.config.ts` should add:
+When `MODIERHEADERS_E2E=1`, `wxt.config.ts` should add:
 
 - `host_permissions`: `http://127.0.0.1:*/*`, `http://localhost:*/*`
 - a deterministic test-only extension key or another deterministic extension-id discovery helper
@@ -43,7 +43,7 @@ tests/e2e/
   server.ts
   selenium.ts
   extensionState.ts
-  cleanheader.e2e.test.ts
+  modierheaders.e2e.test.ts
   fixtures.ts
 ```
 
@@ -52,7 +52,7 @@ Suggested npm scripts:
 ```json
 {
   "test:e2e": "npm run build:e2e && vitest run --config vitest.e2e.config.ts",
-  "test:e2e:debug": "CLEANHEADER_E2E=1 vitest --config vitest.e2e.config.ts"
+  "test:e2e:debug": "MODIERHEADERS_E2E=1 vitest --config vitest.e2e.config.ts"
 }
 ```
 
@@ -63,7 +63,7 @@ The local server should choose a free port and expose these routes:
 | Route | Purpose |
 | --- | --- |
 | `GET /health` | Readiness check. |
-| `GET /page` | Browser page that can run fetch checks and write results to `window.__cleanHeaderResults`. |
+| `GET /page` | Browser page that can run fetch checks and write results to `window.__modierHeadersResults`. |
 | `GET /echo/request` | Returns JSON containing request method, URL, and headers received by the server. |
 | `POST /echo/request` | Same as above, used for request-method targeting. |
 | `GET /echo/response` | Returns response headers used to test response-header set/remove/append. |
@@ -100,8 +100,8 @@ State seeding:
 2. Execute script in that extension page:
 
 ```js
-await chrome.storage.local.set({ cleanheaderState: seededState });
-await chrome.runtime.sendMessage({ type: 'cleanheader:apply-rules' });
+await chrome.storage.local.set({ modierHeadersState: seededState });
+await chrome.runtime.sendMessage({ type: 'modierheaders:apply-rules' });
 return await chrome.declarativeNetRequest.getDynamicRules();
 ```
 
@@ -118,9 +118,9 @@ This avoids fragile UI setup clicks while still testing the shipped service work
 
 ### 2. Request Header `set`
 
-- Seed one enabled rule setting `X-CleanHeader-Test: set-value` for `xmlhttprequest`.
+- Seed one enabled rule setting `X-modierHeaders-Test: set-value` for `xmlhttprequest`.
 - Open `/page` and run `fetch('/echo/request')`.
-- Assert the server received `x-cleanheader-test: set-value`.
+- Assert the server received `x-modierheaders-test: set-value`.
 
 ### 3. Request Header `remove`
 
@@ -130,16 +130,16 @@ This avoids fragile UI setup clicks while still testing the shipped service work
 
 ### 4. Request Header `append`
 
-- Use only a Chrome-supported request-header append target from CleanHeader's allowlist, such as `Accept-Language`.
+- Use only a Chrome-supported request-header append target from the modierHeaders allowlist, such as `Accept-Language`.
 - Seed append rule with a unique token.
 - Assert the server receives the original value plus the appended token where Chrome supports append semantics.
 - If Chrome rejects the operation, assert the extension surfaces a clear diagnostics message and clears dynamic rules.
 
 ### 5. Response Header `set`
 
-- `/echo/response` returns `X-CleanHeader-Response: original`.
+- `/echo/response` returns `X-modierHeaders-Response: original`.
 - Seed response set rule changing it to `modified`.
-- Page fetch reads `response.headers.get('x-cleanheader-response')`.
+- Page fetch reads `response.headers.get('x-modierheaders-response')`.
 - Assert the browser-visible value is `modified`.
 
 ### 6. Response Header `remove`
@@ -186,9 +186,9 @@ This avoids fragile UI setup clicks while still testing the shipped service work
 ### 12. Popup/Options UI Smoke
 
 - Open `chrome-extension://<extension-id>/options.html`.
-- Assert visible text includes `CleanHeader`, `Profile`, `Rules`, `Permissions`, and `Diagnostics`.
+- Assert visible text includes `modierHeaders`, `Profile`, `Rules`, `Permissions`, and `Diagnostics`.
 - Open `chrome-extension://<extension-id>/popup.html`.
-- Assert active profile, enabled rule count, and options button render.
+- Assert active profile, enabled rule count, inline rule editor controls, and diagnostics render.
 - Do not test every form control through UI; compiler/unit tests and state-seeded e2e tests cover behavior more reliably.
 
 ## CI Plan

@@ -1,6 +1,6 @@
 # No Adware Policy
 
-CleanHeader must remain a utility, not a promotion channel.
+modierHeaders must remain a utility, not a promotion channel.
 
 The project prohibits:
 

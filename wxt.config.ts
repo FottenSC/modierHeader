@@ -5,8 +5,8 @@ export default defineConfig({
   manifestVersion: 3,
   srcDir: '.',
   manifest: ({ browser }) => ({
-    name: browser === 'edge' ? 'CleanHeader for Edge' : 'CleanHeader',
-    short_name: 'CleanHeader',
+    name: browser === 'edge' ? 'modierHeaders for Edge' : 'modierHeaders',
+    short_name: 'modierHeaders',
     description:
       'Modify HTTP request headers, response headers, and redirects locally without ads or telemetry.',
     permissions: [

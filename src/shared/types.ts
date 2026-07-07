@@ -15,7 +15,7 @@ export interface RuleTarget {
   requestMethods: RequestMethod[];
 }
 
-export interface CleanHeaderRule {
+export interface ModierHeadersRule {
   id: string;
   name: string;
   enabled: boolean;
@@ -27,11 +27,11 @@ export interface CleanHeaderRule {
   target: RuleTarget;
 }
 
-export interface CleanHeaderProfile {
+export interface ModierHeadersProfile {
   id: string;
   name: string;
   enabled: boolean;
-  rules: CleanHeaderRule[];
+  rules: ModierHeadersRule[];
 }
 
 export interface ApplyDiagnostics {
@@ -41,19 +41,19 @@ export interface ApplyDiagnostics {
   updatedAt: string;
 }
 
-export interface CleanHeaderState {
+export interface ModierHeadersState {
   version: 1;
   enabled: boolean;
   activeProfileId: string;
-  profiles: CleanHeaderProfile[];
+  profiles: ModierHeadersProfile[];
   lastApply?: ApplyDiagnostics;
 }
 
-export interface CleanHeaderExport {
-  schema: 'cleanheader.export.v1';
+export interface ModierHeadersExport {
+  schema: 'modierheaders.export.v1' | 'cleanheader.export.v1';
   exportedAt: string;
-  app: 'CleanHeader';
-  state: CleanHeaderState;
+  app: 'CleanHeader' | 'modierHeaders';
+  state: ModierHeadersState;
 }
 
 export interface ValidationIssue {

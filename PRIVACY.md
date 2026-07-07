@@ -1,14 +1,14 @@
 # Privacy Policy
 
-CleanHeader is local-only.
+modierHeaders is local-only.
 
 ## Data Stored
 
-CleanHeader stores profiles and rules in `chrome.storage.local` on the user's device. Exported JSON files are created only when the user explicitly clicks export.
+modierHeaders stores profiles and rules in `chrome.storage.local` on the user's device. Exported JSON files are created only when the user explicitly clicks export.
 
 ## Data Not Collected
 
-CleanHeader does not collect, transmit, sell, or share:
+modierHeaders does not collect, transmit, sell, or share:
 
 - browsing history
 - visited URLs
@@ -19,4 +19,4 @@ CleanHeader does not collect, transmit, sell, or share:
 
 ## Network Access
 
-CleanHeader does not call any backend service. Browser network rules run locally through Manifest V3 `declarativeNetRequest`.
+modierHeaders does not call any backend service. Browser network rules run locally through Manifest V3 `declarativeNetRequest`.
