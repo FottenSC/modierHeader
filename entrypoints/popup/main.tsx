@@ -82,6 +82,7 @@ function Popup() {
   const [sitePermission, setSitePermission] = useState<SitePermission | null>(null);
   const [hasAllUrls, setHasAllUrls] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
+  const profileListRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     getState()
@@ -246,40 +247,73 @@ function Popup() {
     );
   }
 
+  const activeProfileIndex = Math.max(
+    0,
+    draft.profiles.findIndex((profile) => profile.id === activeProfile.id),
+  );
+
   return (
     <main className="popup" data-color-scheme="light" data-color="brand1" data-size="sm">
-      <header className="popup__header">
-        <div>
-          <Heading level={1} data-size="xs">
-            {APP_NAME}
-          </Heading>
-          <Paragraph data-size="sm" className="popup__subtle">
-            {countEnabledRules(draft)} enabled rule(s), {compileResult?.rules.length ?? 0} compiled
-          </Paragraph>
-        </div>
-        <Switch
-          aria-label="Extension enabled"
-          checked={draft.enabled}
-          onChange={(event) => setDraft({ ...draft, enabled: event.target.checked })}
-        />
-      </header>
+      <header className="profile-banner">
+        <button
+          className="banner-icon-button banner-icon-button--nav"
+          type="button"
+          aria-label="Show profiles"
+          title="Show profiles"
+          onClick={() => profileListRef.current?.querySelector<HTMLButtonElement>('button')?.focus()}
+        >
+          <span aria-hidden="true">☰</span>
+        </button>
 
-      <div className="popup__toolbar">
-        <Button type="button" onClick={save}>
-          Save
-        </Button>
-        <Button type="button" variant="secondary" onClick={exportJson}>
-          Export
-        </Button>
-        <Button type="button" variant="secondary" onClick={() => fileInput.current?.click()}>
-          Import
-        </Button>
-        <input ref={fileInput} type="file" accept="application/json" hidden onChange={importJson} />
-      </div>
+        <div className="profile-banner__identity">
+          <span className="profile-banner__badge" aria-hidden="true">
+            {activeProfileIndex + 1}
+          </span>
+          <div className="profile-banner__text">
+            <Heading level={1} data-size="xs">
+              {activeProfile.name}
+            </Heading>
+            <span>
+              {APP_NAME} · {countEnabledRules(draft)} enabled · {compileResult?.rules.length ?? 0} compiled
+            </span>
+          </div>
+        </div>
+
+        <div className="profile-banner__actions" aria-label="Quick actions">
+          <button className="banner-icon-button" type="button" aria-label="Save and apply" title="Save and apply" onClick={save}>
+            <span aria-hidden="true">✓</span>
+          </button>
+          <button className="banner-icon-button" type="button" aria-label="Add rule" title="Add rule" onClick={addRule}>
+            <span aria-hidden="true">+</span>
+          </button>
+          <button
+            className="banner-icon-button"
+            type="button"
+            aria-label={draft.enabled ? 'Disable extension' : 'Enable extension'}
+            title={draft.enabled ? 'Disable extension' : 'Enable extension'}
+            onClick={() => setDraft({ ...draft, enabled: !draft.enabled })}
+          >
+            <span aria-hidden="true">{draft.enabled ? 'Ⅱ' : '▶'}</span>
+          </button>
+          <button className="banner-icon-button" type="button" aria-label="Export JSON" title="Export JSON" onClick={exportJson}>
+            <span aria-hidden="true">⇩</span>
+          </button>
+          <button
+            className="banner-icon-button"
+            type="button"
+            aria-label="Import JSON"
+            title="Import JSON"
+            onClick={() => fileInput.current?.click()}
+          >
+            <span aria-hidden="true">⇧</span>
+          </button>
+          <input ref={fileInput} type="file" accept="application/json" hidden onChange={importJson} />
+        </div>
+      </header>
 
       <div className="popup-layout">
         <aside className="profile-sidebar" aria-label="Profiles">
-          <nav className="profile-list" aria-label="Switch profile">
+          <nav ref={profileListRef} className="profile-list" aria-label="Switch profile">
             {draft.profiles.map((profile, index) => {
               const enabledRules = profile.rules.filter((rule) => rule.enabled).length;
               const title = `${profile.name}: ${enabledRules}/${profile.rules.length} enabled rules`;
