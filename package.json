@@ -1,0 +1,41 @@
+{
+  "name": "cleanheader",
+  "version": "0.1.0",
+  "description": "A local-only MV3 header and redirect rule editor for Chrome and Edge.",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "wxt",
+    "dev:edge": "wxt -b edge",
+    "prepare:wxt": "wxt prepare",
+    "build": "wxt build",
+    "build:edge": "wxt build -b edge",
+    "zip": "npm run build && node scripts/zip-release.mjs chrome",
+    "zip:edge": "npm run build:edge && node scripts/zip-release.mjs edge",
+    "hash:release": "node scripts/hash-release.mjs",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "policy:check": "node scripts/policy-check.mjs",
+    "manifest:check": "node scripts/manifest-check.mjs",
+    "audit:prod": "npm audit --omit=dev",
+    "verify": "npm run prepare:wxt && npm run policy:check && npm run test && npm run typecheck && npm run build && npm run build:edge && npm run manifest:check && npm run audit:prod"
+  },
+  "dependencies": {
+    "@digdir/designsystemet-css": "^1.18.0",
+    "@digdir/designsystemet-react": "^1.18.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  },
+  "devDependencies": {
+    "@digdir/designsystemet-types": "^1.18.0",
+    "@types/node": "25.0.1",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "@wxt-dev/module-react": "1.2.2",
+    "jszip": "3.10.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.10",
+    "wxt": "0.20.27"
+  }
+}
