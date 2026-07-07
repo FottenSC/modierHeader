@@ -26,6 +26,14 @@ npm run verify
 
 `verify` runs the source policy scanner, unit tests, TypeScript, Chrome and Edge WXT builds, manifest permission snapshot checks, and the production dependency audit.
 
+## Header Test Site
+
+```sh
+npm run serve:headers
+```
+
+The local test site runs at `http://127.0.0.1:5177/` by default and displays the headers sent to the page request plus a live `/headers.json` fetch request. Use `npm run serve:headers -- --port 5180` to choose another port.
+
 ## Release
 
 ```sh
