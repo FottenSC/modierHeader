@@ -98,3 +98,16 @@ export function countEnabledRules(state: ModierHeadersState): number {
   if (!profile?.enabled) return 0;
   return profile.rules.filter((rule) => rule.enabled).length;
 }
+
+export function countOverwrittenHeaders(state: ModierHeadersState): number {
+  if (!state.enabled) return 0;
+  const profile = state.profiles.find((item) => item.id === state.activeProfileId);
+  if (!profile?.enabled) return 0;
+
+  return profile.rules.filter(
+    (rule) =>
+      rule.enabled &&
+      rule.kind !== 'redirect' &&
+      rule.operation === 'set',
+  ).length;
+}

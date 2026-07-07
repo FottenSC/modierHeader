@@ -1,8 +1,8 @@
 import { browser } from 'wxt/browser';
 import { defineBackground } from 'wxt/utils/define-background';
 import { APPLY_RULES_MESSAGE, OPEN_OPTIONS_MESSAGE, type ModierHeadersMessage } from '../src/shared/messages';
-import { STORAGE_KEY } from '../src/shared/constants';
-import { compileStateToDnr } from '../src/shared/compiler';
+import { APP_NAME, STORAGE_KEY } from '../src/shared/constants';
+import { compileStateToDnr, countOverwrittenHeaders } from '../src/shared/compiler';
 import { getState, setState } from '../src/shared/storage';
 import type { ApplyDiagnostics, DnrRule } from '../src/shared/types';
 
@@ -24,6 +24,18 @@ async function assertRegexSupport(rules: DnrRule[]): Promise<void> {
 }
 
 let applying = false;
+
+async function updateActionBadge(count: number): Promise<void> {
+  const text = count <= 0 ? '' : count > 999 ? '999+' : String(count);
+  await browser.action.setBadgeText({ text });
+  await browser.action.setBadgeBackgroundColor({ color: '#54358d' });
+  await browser.action.setTitle({
+    title:
+      count <= 0
+        ? APP_NAME
+        : `${APP_NAME}: ${count} overwritten header${count === 1 ? '' : 's'}`,
+  });
+}
 
 async function applyRules(): Promise<ApplyDiagnostics> {
   if (applying) {
@@ -52,6 +64,7 @@ async function applyRules(): Promise<ApplyDiagnostics> {
       removeRuleIds: existing.map((rule) => rule.id),
       addRules: compiled.rules as never[],
     });
+    await updateActionBadge(countOverwrittenHeaders(state));
 
     diagnostics = {
       ok: true,
@@ -67,6 +80,7 @@ async function applyRules(): Promise<ApplyDiagnostics> {
       removeRuleIds: existing.map((rule) => rule.id),
       addRules: [],
     });
+    await updateActionBadge(0);
     diagnostics = {
       ok: false,
       ruleCount: 0,
